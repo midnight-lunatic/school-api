@@ -86,6 +86,12 @@ app.get('/listSchools', async (req, res) => {
 });
 
 
+app.get("/", (req, res) => {
+  res.send("School API is live!");
+});
+
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
