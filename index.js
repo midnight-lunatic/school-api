@@ -1,12 +1,11 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const pool = require('./db'); 
+const pool = require('./db');
 
 dotenv.config();
 const app = express();
 
 app.use(express.json());
-
 
 // Haversine formula to calculate distance between two lat/lon points
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -24,7 +23,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c; // Distance in KM
 }
 
-
 app.get('/', (req, res) => {
   res.send('School API running!');
 });
@@ -39,7 +37,7 @@ app.post('/addSchool', async (req, res) => {
   }
 
   try {
-    // 2. Insert into DB
+    // 2. Insert into DB using pool.query which returns a promise
     const [result] = await pool.query(
       'INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)',
       [name, address, latitude, longitude]
@@ -52,7 +50,6 @@ app.post('/addSchool', async (req, res) => {
     res.status(500).json({ error: 'Database error' });
   }
 });
-
 
 // GET /listSchools
 app.get('/listSchools', async (req, res) => {
@@ -85,13 +82,9 @@ app.get('/listSchools', async (req, res) => {
   }
 });
 
-
 app.get("/", (req, res) => {
   res.send("School API is live!");
 });
-
-
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
