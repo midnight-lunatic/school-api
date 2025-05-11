@@ -1,12 +1,18 @@
-const mysql = require('mysql2');
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
+const mysql = require('mysql');
 
-const pool = mysql.createPool({
+const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-}).promise();
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
+});
 
-module.exports = pool;
+connection.connect(err => {
+  if (err) {
+    console.error('Database connection failed:', err.stack);
+    return;
+  }
+  console.log('Connected to Railway MySQL');
+});
